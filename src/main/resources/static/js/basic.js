@@ -416,7 +416,7 @@ function setMyprice() {
             window.location.reload();
         },
         error(error, status, request) {
-            logout();
+            alert("유효하지 않은 관심 가격입니다."); // 수정
         }
     })
 }

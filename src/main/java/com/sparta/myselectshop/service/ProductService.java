@@ -9,6 +9,7 @@ import com.sparta.myselectshop.repository.FolderRepository;
 import com.sparta.myselectshop.repository.ProductFolderRepository;
 import com.sparta.myselectshop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -31,15 +33,18 @@ public class ProductService {
 
     public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
 
+        log.info("저장");
         Product product = productRepository.save(new Product(requestDto, user));
         return new ProductResponseDto(product);
     }
 
-    @Transactional // 더티체킹을 위해 꼭 걸어줘야 함.
+
+    @Transactional
     public ProductResponseDto updateProduct(Long id, ProductMypriceRequestDto requestDto) {
-        int myPrice = requestDto.getMyprice();
-        if (myPrice < MIN_MY_PRICE) {
-            throw new IllegalArgumentException("유효하지 않은 관심 가격입니다. 최소 " + MIN_MY_PRICE + "원 이상으로 설정해주세요.");
+        int myprice = requestDto.getMyprice();
+
+        if (myprice < MIN_MY_PRICE) {
+            throw new IllegalArgumentException("유효하지 않은 관심 가격입니다. 최소 " + MIN_MY_PRICE + "원 이상으로 설정해 주세요.");
         }
 
         Product product = productRepository.findById(id).orElseThrow(() ->
