@@ -39,4 +39,5 @@ out/
 # Ignore application.properties
 application.properties
 
-gradle/wrapper
+*.jar
+*.properties
